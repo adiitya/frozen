@@ -6,9 +6,10 @@ from django.contrib.auth import authenticate, login, logout
 
 # Create your views here.
 
-def login(request):
+def user_login(request):
     if request.user.is_authenticated():
         return HttpResponse("You are already logged in")
+    error = ""
     if request.method == 'POST':
         username = request.POST['username'];
         password = request.POST['password'];
@@ -22,9 +23,9 @@ def login(request):
                 return HttpResponse('Sorry, this account is disabled')
         else:
             error = "Invalid credentials"
-    return render(request, 'polls/login.html', { 'error': error})
+    return render(request, 'dashboard/login.html', { 'error': error})
 
-def logout(request):
+def user_logout(request):
     logout(request)
 
     return HttpResponse('Successfully logged out')
