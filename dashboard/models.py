@@ -13,3 +13,13 @@ class UserProfile(models.Model):
 
     # Whether the user is alive or not
     alive = models.BooleanField(default = False)
+
+class IPs(models.Model):
+	#Stores ip address to monitor
+	ip = models.GenericIPAddressField('ip_address')
+
+	#Last time when status was fetched for this IP
+	last_access = models.DateTimeField('last access')
+
+	#Time after which status is fetched for this IP
+	min_poll_time = models.IntegerField(default = 5)
