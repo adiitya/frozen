@@ -1,0 +1,7 @@
+<form action="{% url 'dashboard:settings' %}" method="POST">
+    {% csrf_token %}
+    Password: <input type="password" name="password1" /><br />
+    Re-type password: <input type="password" name="password2" /><br />
+    {% if error %}{{ error }}{% endif %}
+    <input type="submit" value="Update settings" />
+</form>
