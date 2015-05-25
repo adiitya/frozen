@@ -23,3 +23,9 @@ class IPs(models.Model):
 
 	#Time after which status is fetched for this IP
 	min_poll_time = models.IntegerField(default = 5)
+
+class UserIpMap(models.Model):
+	#This model specifies mapping betweeen user and IP being watched
+	client_id = models.ForeignKey(UserProfile)
+	ip_id = models.ForeignKey(IPs)
+	polling_time = models.IntegerField(default = 5)
