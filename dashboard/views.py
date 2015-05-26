@@ -58,7 +58,7 @@ def add_ip(request):
 			try: 
 				IPs_object, created = IPs.objects.get_or_create(ip = request.POST['ip'])
 			except KeyError:
-				return HttpResponse("IP filed is blank")
+				return HttpResponse("IP field is blank")
 			#Create an entry in client table
 			try KeyError:
 				UserIpMap_object = UserIpMap(request.user.id, IPs_object.id, request.POST['ip'], request.POST['polling_time'])	
@@ -69,7 +69,23 @@ def add_ip(request):
 	    	#Update global IP table with it.
 	    	IPs_object.min_poll_time = min_polling_time
 	    	IPs_object.save()
+            #LATER redirect to home
 
 	else:
 		return HttpResponse("You need to log in first")
+
+
+def delete_ip(request):
+    #Check if user is logged in or not
+    if request.user.is_authenticated():
+        if request.method == 'POST' and 'ip' in request.POST:
+            #delete entry from client table.
+            UserIpMap.objects.filter(request.user.id, ip = request.POST['ip']).delete()
+            #If no other user has requested for this IP then delete it from main table as well
+            if not UserIpMap.objects.filter(ip = request.POST['ip']).exists()
+                IPs.objects.filter(ip = request.POST['ip']).delete()
+            #LATER redirect to home and also validate IPs
+
+    else:
+        return HttpResponse("You need to log in first")
 
