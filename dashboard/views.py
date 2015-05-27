@@ -23,13 +23,13 @@ def user_login(request):
         return HttpResponseRedirect(reverse('dashboard:home'))
     error = ""
     if request.method == 'POST':
-        set_access(request)
         username = request.POST['username'];
         password = request.POST['password'];
         user = authenticate(username=username, password=password);
         if user is not None:
             if user.is_active:
                 login(request, user)
+                set_access(request)
                 #return HttpResponseRedirect(reverse('dashboard:index'))
                 return HttpResponseRedirect(reverse('dashboard:home'))
             else:
@@ -119,7 +119,6 @@ def set_access(request):
             UserProfile_object.alive = True
         UserProfile_object.last_access = datetime.now()
         UserProfile_object.save()
-        print "aas"
         return HttpResponse("Data for user updated")
     else:
         return HttpResponse("User id not logged in")
