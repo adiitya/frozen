@@ -2,10 +2,12 @@ from django.views import generic
 from django.core.urlresolvers import reverse
 from django.shortcuts import render , get_object_or_404
 from django.http import HttpResponse, Http404, HttpResponseRedirect
-from .models import IPs, UserIpMap
+from .models import IPs, UserIpMap, UserProfile
 from django.contrib.auth import authenticate, login, logout
 from django.db.models import Min
+rom django.template import RequestContext, loader
 from django.utils import timezone
+from datetime import datetime
 
 # Create your views here.
 
@@ -14,6 +16,7 @@ def user_login(request):
         return HttpResponse("You are already logged in")
     error = ""
     if request.method == 'POST':
+        set_access(request)
         username = request.POST['username'];
         password = request.POST['password'];
         user = authenticate(username=username, password=password);
@@ -60,9 +63,9 @@ def add_ip(request):
 			except KeyError:
 				return HttpResponse("IP field is blank")
 			#Create an entry in client table
-			try KeyError:
+			try:
 				UserIpMap_object = UserIpMap(request.user.id, IPs_object.id, request.POST['ip'], request.POST['polling_time'])	
-			except:
+			except KeyError:
 				return HttpResponse("Please provide all the fields.")
 			#Get minimum polling time for this IP address from global Map table
 	    	min_polling_time = UserIpMap.objects.filter(ip = request.POST['ip']).aggregate(Min('polling_time'))['polling_time__min']
@@ -82,10 +85,24 @@ def delete_ip(request):
             #delete entry from client table.
             UserIpMap.objects.filter(request.user.id, ip = request.POST['ip']).delete()
             #If no other user has requested for this IP then delete it from main table as well
-            if not UserIpMap.objects.filter(ip = request.POST['ip']).exists()
-                IPs.objects.filter(ip = request.POST['ip']).delete()
+            #if not UserIpMap.objects.filter(ip = request.POST['ip']).exists()
+            IPs.objects.filter(ip = request.POST['ip']).delete()
             #LATER redirect to home and also validate IPs
 
     else:
         return HttpResponse("You need to log in first")
+
+def set_access(request):
+    #Check if user is logged in or not
+    if request.user.is_authenticated():
+        UserProfile_object = request.user.userprofile
+        #If user is dead
+        if not UserProfile_object.alive: 
+            UserProfile_object.alive = True
+        UserProfile_object.last_access = datetime.now()
+        UserProfile_object.save()
+        print "aas"
+        return HttpResponse("Data for user updated")
+    else:
+        return HttpResponse("User id not logged in")
 
