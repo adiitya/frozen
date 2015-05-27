@@ -39,7 +39,7 @@ class IPs(models.Model):
     min_poll_time = models.IntegerField(default = 5)
 
     def update_min_poll_time(self):
-        data = UserIpMap.objects.filter(ip=self).aggregate(min_poll_time=Min('polling_time'))
+        data = UserIpMap.objects.filter(ip=self,client__userprofile__alive=True).aggregate(min_poll_time=Min('polling_time'))
         self.min_poll_time = data['min_poll_time']
         self.save();
 

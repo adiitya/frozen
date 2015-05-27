@@ -44,6 +44,7 @@ INSTALLED_APPS = (
 CRON_CLASSES = [
     'dashboard.cron.TestCronJob',
     'dashboard.cron.SetMinPollTimeCronJob',
+    'dashboard.cron.CleanInactiveUsers',
 ]
 
 MIDDLEWARE_CLASSES = (
