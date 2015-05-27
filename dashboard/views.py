@@ -5,7 +5,7 @@ from django.http import HttpResponse, Http404, HttpResponseRedirect
 from .models import IPs, UserIpMap, UserProfile
 from django.contrib.auth import authenticate, login, logout
 from django.db.models import Min
-rom django.template import RequestContext, loader
+from django.template import RequestContext, loader
 from django.utils import timezone
 from datetime import datetime
 
