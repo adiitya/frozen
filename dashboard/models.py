@@ -26,6 +26,6 @@ class IPs(models.Model):
 
 class UserIpMap(models.Model):
 	#This model specifies mapping betweeen user and IP being watched
-	client_id = models.ForeignKey(UserProfile)
-	ip_id = models.ForeignKey(IPs)
+	client = models.ForeignKey(User)
+	ip = models.ForeignKey(IPs)
 	polling_time = models.IntegerField(default = 5)
