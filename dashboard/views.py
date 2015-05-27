@@ -29,6 +29,7 @@ def user_login(request):
         if user is not None:
             if user.is_active:
                 login(request, user)
+                check_dead_add_ip(request)
                 set_access(request)
                 #return HttpResponseRedirect(reverse('dashboard:index'))
                 return HttpResponseRedirect(reverse('dashboard:home'))
@@ -114,12 +115,19 @@ def set_access(request):
     #Check if user is logged in or not
     if request.user.is_authenticated():
         UserProfile_object = request.user.userprofile
-        #If user is dead
-        if not UserProfile_object.alive: 
-            UserProfile_object.alive = True
         UserProfile_object.last_access = datetime.now()
         UserProfile_object.save()
         return HttpResponse("Data for user updated")
     else:
         return HttpResponse("User id not logged in")
 
+def check_dead_add_ip(request):
+    UserProfile_object = request.user.userprofile
+    #If user is dead
+    if not UserProfile_object.alive: 
+        UserProfile_object.alive = True
+        #Fecth all the UserIpMap 
+        UserIpMap_object_list = UserIpMap.objects.filter(client =request.user)
+        for UserProfile_object in UserIpMap_object_list:
+            IPs_object = IPs.objects.get_or_create(ip = UserIpMap_object.ip.ip)
+    return HttpResponse("Done")
