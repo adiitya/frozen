@@ -18,9 +18,9 @@ class UserProfile(models.Model):
     alive = models.BooleanField(default = False)
 
     @receiver(post_save, sender=User)
-    def create_profile_for_user(sender, instance=None, created=False, **kwargs):    
+    def create_profile_for_user(sender, instance=None, created=False, **kwargs):
         if created:
-            UserProfile.objects.get_or_create(user=instance)
+                UserProfile.objects.get_or_create(user=instance)
 
     @receiver(pre_delete, sender=User)
     def delete_profile_for_user(sender, instance=None, **kwargs):
@@ -39,7 +39,7 @@ class IPs(models.Model):
     min_poll_time = models.IntegerField(default = 5)
 
     def update_min_poll_time(self):
-        data = UserIpMap.objects.filter(ip=self).aggregate(min_poll_time=Min('polling_time'))  
+        data = UserIpMap.objects.filter(ip=self).aggregate(min_poll_time=Min('polling_time'))
         self.min_poll_time = data['min_poll_time']
         self.save();
 
