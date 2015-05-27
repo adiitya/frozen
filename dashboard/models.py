@@ -11,7 +11,7 @@ class UserProfile(models.Model):
     user = models.OneToOneField(User)
 
     # The last access time of the user
-    last_access = models.DateTimeField('last access')
+    last_access = models.DateTimeField('last access', default = datetime.datetime(1970,1,1))
 
     # Whether the user is alive or not
     alive = models.BooleanField(default = False)
