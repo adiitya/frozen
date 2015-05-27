@@ -1,6 +1,8 @@
 import datetime
 from django.db import models
 from django.contrib.auth.models import User
+from django.db.models.signals import post_save, pre_delete
+from django.dispatch import receiver
 
 # Create your models here.
 
@@ -12,7 +14,18 @@ class UserProfile(models.Model):
     last_access = models.DateTimeField('last access')
 
     # Whether the user is alive or not
-    alive = models.BooleanField(default = False)	
+    alive = models.BooleanField(default = False)
+
+    @receiver(post_save, sender=User)
+    def create_profile_for_user(sender, instance=None, created=False, **kwargs):	
+        if created:
+            UserProfile.objects.get_or_create(user=instance)
+
+    @receiver(pre_delete, sender=User)
+    def delete_profile_for_user(sender, instance=None, **kwargs):
+        if instance:
+            user_profile = UserProfile.objects.get(user=instance)
+            user_profile.delete()
 
 class IPs(models.Model):
 	#Stores ip address to monitor
