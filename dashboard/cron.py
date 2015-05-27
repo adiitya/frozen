@@ -21,9 +21,8 @@ class SetMinPollTimeCronJob(CronJobBase):
     def do(self):
         # Iterating over every IP in IPs
         for IP in IPs.objects.all():
-            IP.min_polling_time = UserIpMap.objects.filter(ip=IP).aggregate(min_polling_time=Min('polling_time'))['min_polling_time']
-            IP.save();
-            print "Setting min polling time of " + IP.ip + " to " + IP.min_polling_time
+            IP.update_min_poll_time();
+            print "Updating min_poll_time for " + IP.ip
 
 
 
