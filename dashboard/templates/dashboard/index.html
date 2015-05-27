@@ -1,0 +1,20 @@
+{% if alert_message %}
+	<h2>
+		{{alert_message}}
+	</h2>
+{% endif %}
+
+<form action="{% url 'dashboard:addIp' %}" method="POST">
+	{% csrf_token %}
+	IP: <input type="text" name="ip"/><br/>
+	Polling time: <input type="text" name="polling_time" /><br/>
+	<input type="submit" value="Add IP" />
+</form>
+
+<form action="{% url 'dashboard:deleteIp' %}" method="POST">
+	{% csrf_token %}
+	IP: <input type="text" name="ip"/><br/>
+	<input type="submit" value="Delete IP" />
+</form>
+
+
