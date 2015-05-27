@@ -4,7 +4,6 @@ from django.shortcuts import render , get_object_or_404
 from django.http import HttpResponse, Http404, HttpResponseRedirect
 from .models import IPs, UserIpMap, UserProfile
 from django.contrib.auth import authenticate, login, logout
-from django.db.models import Min
 from django.template import RequestContext, loader
 from django.utils import timezone
 from datetime import datetime
@@ -76,11 +75,7 @@ def add_ip(request):
                                         defaults = {'polling_time': request.POST['polling_time']})
             except KeyError:
                 return HttpResponse("Please provide all the fields.")
-            #Get minimum polling time for this IP address from global Map table
-            data = UserIpMap.objects.filter(ip = IPs_object).aggregate(min_poll_time = Min('polling_time'))  
-            #Update global IP table with it.
-            IPs_object.min_poll_time = data['min_poll_time']
-            IPs_object.save()
+            IPs_object.update_min_poll_time()
             return HttpResponse("Added IP")
         else:
             return HttpResponse("Request Metod Error")
