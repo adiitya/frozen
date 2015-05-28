@@ -22,6 +22,7 @@ class SetMinPollTimeCronJob(CronJobBase):
     code = 'dashboard.set_min_poll_time_cron_job'
 
     def do(self):
+        print "Running SetMinPollTimeCronJob"
         # Iterating over every IP in IPs
         for IP in IPs.objects.all():
             IP.update_min_poll_time();
@@ -37,6 +38,7 @@ class CleanInactiveUsers(CronJobBase):
     code = 'dashboard.clean_inactive_users'
 
     def do(self):
+        print "CleanInactiveUsers"
         # Iterating over all userse
         for user in User.objects.all():
             if user.userprofile.alive:
@@ -49,18 +51,14 @@ class CleanInactiveUsers(CronJobBase):
 
                     # Logging out user
                     # [s.delete() for s in Session.objects.all() if s.get_decoded().get('_auth_user_id') == user.id]
-                    # Does not works yet
+                    # Does not work yet
 
-                    # Deleting IP from IPs table if it's the only client using it
+                    # Setting IP's alive to False in IPs table if it's the only client using it
                     for userIpMap in UserIpMap.objects.filter(client=user):
                         if len(UserIpMap.objects.filter(ip__ip=userIpMap.ip.ip, client__userprofile__alive=True)) == 0:
                             # No alive user is requesting that IP
-                            print "Deleting IP from table: " + userIpMap.ip.ip
-                            userIpMap.ip.delete()
+                            print "Setting alive to False for IP: " + userIpMap.ip.ip
+                            userIpMap.ip.alive = False
+                            userIpMap.ip.save()
                         else:
                             userIpMap.ip.update_min_poll_time()
-
-
-
-
-
