@@ -137,6 +137,8 @@ def check_dead_add_ip(request):
         UserProfile_object.alive = True
         #Fecth all the UserIpMap 
         UserIpMap_object_list = UserIpMap.objects.filter(client =request.user)
-        for UserProfile_object in UserIpMap_object_list:
+        for UserIpMap_object in UserIpMap_object_list:
             IPs_object = IPs.objects.get_or_create(ip = UserIpMap_object.ip.ip)
+            IPs_object.alive = True
+            IPs_object.save()
     return HttpResponse("Done")
