@@ -1,6 +1,6 @@
 from django.http import HttpResponse, Http404, HttpResponseRedirect
 from django.core.urlresolvers import reverse
-from dashboard.models import IPs, UserIpMap, UserProfile
+from dashboard.models import Ip, UserIpMap, UserProfile
 from django.conf import settings
 from django.contrib.auth import authenticate, login, logout
 import re

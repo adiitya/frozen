@@ -2,7 +2,7 @@ from django.views import generic
 from django.core.urlresolvers import reverse
 from django.shortcuts import render , get_object_or_404
 from django.http import HttpResponse, Http404, HttpResponseRedirect, JsonResponse
-from .models import IPs, UserIpMap, UserProfile
+from .models import Ip, UserIpMap, UserProfile
 from django.contrib.auth import authenticate, login, logout
 from django.template import RequestContext, loader
 from django.utils import timezone
@@ -63,13 +63,13 @@ def user_logout(request):
 def user_status(request):
     ip_address = request.GET['ip']
     try:
-        IP = IPs.objects.get(ip=ip_address)
-        if not IP.alive:
+        Ip_object =Ip.objects.get(name=ip_address)
+        if not Ip_object.alive:
             return JsonResponse({'error': 'IP entry is dead'})
         response_data = {}
-        response_data['ip'] = ip_address
-        response_data['status'] = IP.status
-        response_data['last_access'] = IP.last_access
+        response_data['name'] = ip_address.name
+        response_data['status'] = Ip_object.status
+        response_data['last_fetched'] = Ip_object.last_fetched
         return JsonResponse(response_data)
     except:
         return JsonResponse({'error': 'IP does not exist'})
@@ -80,16 +80,16 @@ def add_ip(request):
         if request.method == 'POST':
             #Fetch this IP object from central db or create one if not their    
             try: 
-                IPs_object, created = IPs.objects.get_or_create(ip = request.POST['ip'])
+                Ip_object, created = Ip.objects.get_or_create(name = request.POST['ip'])
             except KeyError:
                 return HttpResponse("IP field is blank")
             #Create an entry in client table
             try:
-                UserIpMap_object = UserIpMap.objects.get_or_create(client=request.user, ip=IPs_object, 
+                UserIpMap_object = UserIpMap.objects.get_or_create(client=request.user, ip=Ip_object, 
                                         defaults = {'polling_time': request.POST['polling_time']})
             except KeyError:
                 return HttpResponse("Please provide all the fields.")
-            IPs_object.update_min_poll_time()
+            Ip_object.update_min_poll_time()
             return HttpResponse("Added IP")
         else:
             return HttpResponse("Request Metod Error")
@@ -104,17 +104,17 @@ def delete_ip(request):
         if request.method == 'POST' and 'ip' in request.POST:
             #delete entry from client table.
             try:
-                IPs_object = IPs.objects.get(ip = request.POST['ip'])
+                Ip_object = Ip.objects.get(name = request.POST['ip'])
             except:
                 return HttpResponse("No Ip exist in main server table")
             try:
-                UserIpMap.objects.filter(client = request.user, ip = IPs_object ).delete()
+                UserIpMap.objects.filter(client = request.user, ip = Ip_object ).delete()
             except:
                 return HttpResponse("No Ip exist in UserIpMap table")
             #If no other user has requested for this IP then delete it from main table as well
-            if not UserIpMap.objects.filter(ip = IPs_object).exists():
-                IPs.objects.filter(ip = IPs_object.ip).delete()
-            #LATER redirect to home and also validate IPs
+            if not UserIpMap.objects.filter(ip = Ip_object).exists():
+                Ip.objects.filter(name = Ip_object.name).delete()
+            #LATER redirect to home and also validate Ip
             return HttpResponse("IP deleted")
 
     else:
@@ -139,8 +139,8 @@ def check_dead_add_ip(request):
         #Fecth all the UserIpMap 
         UserIpMap_object_list = UserIpMap.objects.filter(client =request.user)
         for UserIpMap_object in UserIpMap_object_list:
-            IPs_object = IPs.objects.get_or_create(ip = UserIpMap_object.ip.ip)
-            IPs_object.alive = True
-            IPs_object.save()
-            IPs_object.update_min_poll_time()
+            Ip_object = Ip.objects.get_or_create(name = UserIpMap_object.ip.name)
+            Ip_object.alive = True
+            Ip_object.save()
+            Ip_object.update_min_poll_time()
     return HttpResponse("Done")
