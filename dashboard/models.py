@@ -38,6 +38,12 @@ class IPs(models.Model):
     #Time after which status is fetched for this IP
     min_poll_time = models.IntegerField(default = 5)
 
+    #The status of this IP
+    status = models.CharField(max_length=1000, null=True, blank=True)
+
+    # Whether the IP is alive or not
+    alive = models.BooleanField(default = True)
+
     def update_min_poll_time(self):
         data = UserIpMap.objects.filter(ip=self,client__userprofile__alive=True).aggregate(min_poll_time=Min('polling_time'))
         self.min_poll_time = data['min_poll_time']

@@ -1,7 +1,7 @@
 from django.views import generic
 from django.core.urlresolvers import reverse
 from django.shortcuts import render , get_object_or_404
-from django.http import HttpResponse, Http404, HttpResponseRedirect
+from django.http import HttpResponse, Http404, HttpResponseRedirect, JsonResponse
 from .models import IPs, UserIpMap, UserProfile
 from django.contrib.auth import authenticate, login, logout
 from django.template import RequestContext, loader
@@ -28,6 +28,7 @@ def user_login(request):
         if user is not None:
             if user.is_active:
                 login(request, user)
+                check_dead_add_ip(request)
                 set_access(request)
                 #return HttpResponseRedirect(reverse('dashboard:index'))
                 return HttpResponseRedirect(reverse('dashboard:home'))
@@ -58,6 +59,20 @@ def user_logout(request):
     logout(request)
 
     return HttpResponse('Successfully logged out')
+
+def user_status(request):
+    ip_address = request.GET['ip']
+    try:
+        IP = IPs.objects.get(ip=ip_address)
+        if not IP.alive:
+            return JsonResponse({'error': 'IP entry is dead'})
+        response_data = {}
+        response_data['ip'] = ip_address
+        response_data['status'] = IP.status
+        response_data['last_access'] = IP.last_access
+        return JsonResponse(response_data)
+    except:
+        return JsonResponse({'error': 'IP does not exist'})
 
 def add_ip(request):
     #Check if user is logged in or not
@@ -109,12 +124,21 @@ def set_access(request):
     #Check if user is logged in or not
     if request.user.is_authenticated():
         UserProfile_object = request.user.userprofile
-        #If user is dead
-        if not UserProfile_object.alive: 
-            UserProfile_object.alive = True
         UserProfile_object.last_access = datetime.now()
         UserProfile_object.save()
         return HttpResponse("Data for user updated")
     else:
         return HttpResponse("User id not logged in")
 
+def check_dead_add_ip(request):
+    UserProfile_object = request.user.userprofile
+    #If user is dead
+    if not UserProfile_object.alive: 
+        UserProfile_object.alive = True
+        #Fecth all the UserIpMap 
+        UserIpMap_object_list = UserIpMap.objects.filter(client =request.user)
+        for UserIpMap_object in UserIpMap_object_list:
+            IPs_object = IPs.objects.get_or_create(ip = UserIpMap_object.ip.ip)
+            IPs_object.alive = True
+            IPs_object.save()
+    return HttpResponse("Done")
