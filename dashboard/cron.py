@@ -50,8 +50,7 @@ class CleanInactiveUsers(CronJobBase):
                     user.userprofile.save()
 
                     # Logging out user
-                    # [s.delete() for s in Session.objects.all() if s.get_decoded().get('_auth_user_id') == user.id]
-                    # Does not work yet
+                    [s.delete() for s in Session.objects.all() if s.get_decoded().get('_auth_user_id') == str(user.id)]
 
                     # Setting IP's alive to False in IPs table if it's the only client using it
                     for userIpMap in UserIpMap.objects.filter(client=user):
