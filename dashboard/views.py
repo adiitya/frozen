@@ -1,7 +1,7 @@
 from django.views import generic
 from django.core.urlresolvers import reverse
 from django.shortcuts import render , get_object_or_404
-from django.http import HttpResponse, Http404, HttpResponseRedirect
+from django.http import HttpResponse, Http404, HttpResponseRedirect, JsonResponse
 from .models import IPs, UserIpMap, UserProfile
 from django.contrib.auth import authenticate, login, logout
 from django.template import RequestContext, loader
@@ -59,6 +59,18 @@ def user_logout(request):
     logout(request)
 
     return HttpResponse('Successfully logged out')
+
+def user_status(request):
+    ip_address = request.GET['ip']
+    try:
+        IP = IPs.objects.get(ip=ip_address)
+        response_data = {}
+        response_data['ip'] = ip_address
+        response_data['status'] = IP.status
+        response_data['last_access'] = IP.last_access
+        return JsonResponse(response_data)
+    except:
+        return JsonResponse({'error': 'IP does not exist'})
 
 def add_ip(request):
     #Check if user is logged in or not
