@@ -64,6 +64,8 @@ def user_status(request):
     ip_address = request.GET['ip']
     try:
         IP = IPs.objects.get(ip=ip_address)
+        if not IP.alive:
+            return JsonResponse({'error': 'IP entry is dead'})
         response_data = {}
         response_data['ip'] = ip_address
         response_data['status'] = IP.status
