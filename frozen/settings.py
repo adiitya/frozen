@@ -56,6 +56,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    'frozen.middlewares.ValidateRequestMiddleware',
 )
 
 ROOT_URLCONF = 'frozen.urls'

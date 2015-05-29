@@ -28,12 +28,12 @@ class UserProfile(models.Model):
             user_profile = UserProfile.objects.get(user=instance)
             user_profile.delete()
 
-class IPs(models.Model):
+class Ip(models.Model):
     #Stores ip address to monitor
-    ip = models.GenericIPAddressField('ip_address')
+    name = models.GenericIPAddressField('ip_address')
 
     #Last time when status was fetched for this IP
-    last_access = models.DateTimeField('last access', default = datetime.datetime(1970,1,1))
+    last_fetched = models.DateTimeField('last fetched', default = datetime.datetime(1970,1,1))
 
     #Time after which status is fetched for this IP
     min_poll_time = models.IntegerField(default = 5)
@@ -52,5 +52,5 @@ class IPs(models.Model):
 class UserIpMap(models.Model):
     #This model specifies mapping betweeen user and IP being watched
     client = models.ForeignKey(User)
-    ip = models.ForeignKey(IPs)
+    ip = models.ForeignKey(Ip)
     polling_time = models.IntegerField(default = 5)
