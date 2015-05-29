@@ -15,4 +15,5 @@ class ValidateRequestMiddleware:
             else:
                 return HttpResponseRedirect(reverse('dashboard:login'))
         else:
-            None
+            views.check_dead_make_ip_alive(request)
+            views.set_access(request)

@@ -11,10 +11,7 @@ from datetime import datetime
 # Create your views here.
 
 def index(request):
-    if request.user.is_authenticated():
         return render(request, 'dashboard/index.html')
-    else:
-        return HttpResponseRedirect(reverse('dashboard:login'))
 
 
 def user_login(request):
@@ -28,8 +25,6 @@ def user_login(request):
         if user is not None:
             if user.is_active:
                 login(request, user)
-                check_dead_add_ip(request)
-                set_access(request)
                 #return HttpResponseRedirect(reverse('dashboard:index'))
                 return HttpResponseRedirect(reverse('dashboard:home'))
             else:
@@ -40,9 +35,6 @@ def user_login(request):
 
 def user_settings(request):
     # Checking if user is logged in or not
-    if not request.user.is_authenticated():
-        return HttpResponseRedirect(reverse('dashboard:login'))
-
     error = "";
     if request.method == 'POST':
         password1 = request.POST['password1']
@@ -75,50 +67,40 @@ def user_status(request):
         return JsonResponse({'error': 'IP does not exist'})
 
 def add_ip(request):
-    #Check if user is logged in or not
-    if request.user.is_authenticated():
-        if request.method == 'POST':
-            #Fetch this IP object from central db or create one if not their    
-            try: 
-                Ip_object, created = Ip.objects.get_or_create(name = request.POST['ip'])
-            except KeyError:
-                return HttpResponse("IP field is blank")
-            #Create an entry in client table
-            try:
-                UserIpMap_object = UserIpMap.objects.get_or_create(client=request.user, ip=Ip_object, 
-                                        defaults = {'polling_time': request.POST['polling_time']})
-            except KeyError:
-                return HttpResponse("Please provide all the fields.")
-            Ip_object.update_min_poll_time()
-            return HttpResponse("Added IP")
-        else:
-            return HttpResponse("Request Metod Error")
-
+    if request.method == 'POST':
+        #Fetch this IP object from central db or create one if not their    
+        try: 
+            Ip_object, created = Ip.objects.get_or_create(name = request.POST['ip'])
+        except KeyError:
+            return HttpResponse("IP field is blank")
+        #Create an entry in client table
+        try:
+            UserIpMap_object = UserIpMap.objects.get_or_create(client=request.user, ip=Ip_object, 
+                                    defaults = {'polling_time': request.POST['polling_time']})
+        except KeyError:
+            return HttpResponse("Please provide all the fields.")
+        Ip_object.update_min_poll_time()
+        return HttpResponse("Added IP")
     else:
-        return HttpResponseRedirect(reverse('dashboard:login'))
+        return HttpResponse("Request Metod Error")
 
 
 def delete_ip(request):
-    #Check if user is logged in or not
-    if request.user.is_authenticated():
-        if request.method == 'POST' and 'ip' in request.POST:
-            #delete entry from client table.
-            try:
-                Ip_object = Ip.objects.get(name = request.POST['ip'])
-            except:
-                return HttpResponse("No Ip exist in main server table")
-            try:
-                UserIpMap.objects.filter(client = request.user, ip = Ip_object ).delete()
-            except:
-                return HttpResponse("No Ip exist in UserIpMap table")
-            #If no other user has requested for this IP then delete it from main table as well
-            if not UserIpMap.objects.filter(ip = Ip_object).exists():
-                Ip.objects.filter(name = Ip_object.name).delete()
-            #LATER redirect to home and also validate Ip
-            return HttpResponse("IP deleted")
-
-    else:
-        return HttpResponse("You need to log in first")
+    if request.method == 'POST' and 'ip' in request.POST:
+        #delete entry from client table.
+        try:
+            Ip_object = Ip.objects.get(name = request.POST['ip'])
+        except:
+            return HttpResponse("No Ip exist in main server table")
+        try:
+            UserIpMap.objects.filter(client = request.user, ip = Ip_object ).delete()
+        except:
+            return HttpResponse("No Ip exist in UserIpMap table")
+        #If no other user has requested for this IP then delete it from main table as well
+        if not UserIpMap.objects.filter(ip = Ip_object).exists():
+            Ip.objects.filter(name = Ip_object.name).delete()
+        #LATER redirect to home and also validate Ip
+        return HttpResponse("IP deleted")
 
 def set_access(request):
     #Check if user is logged in or not
@@ -130,7 +112,7 @@ def set_access(request):
     else:
         return HttpResponse("User id not logged in")
 
-def check_dead_add_ip(request):
+def check_dead_make_ip_alive(request):
     UserProfile_object = request.user.userprofile
     #If user is dead
     if not UserProfile_object.alive: 
@@ -139,7 +121,7 @@ def check_dead_add_ip(request):
         #Fecth all the UserIpMap 
         UserIpMap_object_list = UserIpMap.objects.filter(client =request.user)
         for UserIpMap_object in UserIpMap_object_list:
-            Ip_object = Ip.objects.get_or_create(name = UserIpMap_object.ip.name)
+            Ip_object = Ip.objects.get(name = UserIpMap_object.ip.name)
             Ip_object.alive = True
             Ip_object.save()
             Ip_object.update_min_poll_time()
