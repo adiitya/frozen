@@ -4,7 +4,7 @@ from datetime import timedelta
 
 from django.contrib.sessions.models import Session
 from django.contrib.auth.models import User
-from .models import IPs, UserIpMap, UserProfile
+from .models import Ip, UserIpMap, UserProfile
 
 class TestCronJob(CronJobBase):
     RUN_EVERY_MINS = 1
@@ -23,10 +23,10 @@ class SetMinPollTimeCronJob(CronJobBase):
 
     def do(self):
         print "Running SetMinPollTimeCronJob"
-        # Iterating over every IP in IPs
-        for IP in IPs.objects.all():
+        # Iterating over every IP in Ip
+        for IP in Ip.objects.all():
             IP.update_min_poll_time();
-            print "Updating min_poll_time for " + IP.ip
+            print "Updating min_poll_time for " + IP.name
 
 class CleanInactiveUsers(CronJobBase):
     RUN_EVERY_MINS = 1
@@ -52,11 +52,11 @@ class CleanInactiveUsers(CronJobBase):
                     # Logging out user
                     [s.delete() for s in Session.objects.all() if s.get_decoded().get('_auth_user_id') == str(user.id)]
 
-                    # Setting IP's alive to False in IPs table if it's the only client using it
+                    # Setting IP's alive to False in Ip table if it's the only client using it
                     for userIpMap in UserIpMap.objects.filter(client=user):
-                        if len(UserIpMap.objects.filter(ip__ip=userIpMap.ip.ip, client__userprofile__alive=True)) == 0:
+                        if len(UserIpMap.objects.filter(ip__name=userIpMap.ip.name, client__userprofile__alive=True)) == 0:
                             # No alive user is requesting that IP
-                            print "Setting alive to False for IP: " + userIpMap.ip.ip
+                            print "Setting alive to False for IP: " + userIpMap.ip.name
                             userIpMap.ip.alive = False
                             userIpMap.ip.save()
                         else:
