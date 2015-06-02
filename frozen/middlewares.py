@@ -8,6 +8,7 @@ from dashboard import views
 
 
 class ValidateRequestMiddleware:
+
     def process_view(self, request, view_func, view_args, view_kwargs):
         if not request.user.is_authenticated():
             if request.META['PATH_INFO'] == '/login/' or 'admin' in request.META['PATH_INFO'] :

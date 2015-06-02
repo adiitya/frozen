@@ -45,6 +45,7 @@ CRON_CLASSES = [
     'dashboard.cron.TestCronJob',
     'dashboard.cron.SetMinPollTimeCronJob',
     'dashboard.cron.CleanInactiveUsers',
+    'dashboard.cron.FetchIpStatus',
 ]
 
 MIDDLEWARE_CLASSES = (

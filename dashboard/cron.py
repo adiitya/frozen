@@ -5,6 +5,7 @@ from datetime import timedelta
 from django.contrib.sessions.models import Session
 from django.contrib.auth.models import User
 from .models import Ip, UserIpMap, UserProfile
+import requests
 
 class TestCronJob(CronJobBase):
     RUN_EVERY_MINS = 1
@@ -53,7 +54,8 @@ class CleanInactiveUsers(CronJobBase):
                     [s.delete() for s in Session.objects.all() if s.get_decoded().get('_auth_user_id') == str(user.id)]
 
                     # Setting IP's alive to False in Ip table if it's the only client using it
-                    for userIpMap in UserIpMap.objects.filter(client=user):
+                    UserIpMap_object = UserIpMap.objects.filter(client=user)
+                    for userIpMap in UserIpMap_object:
                         if len(UserIpMap.objects.filter(ip__name=userIpMap.ip.name, client__userprofile__alive=True)) == 0:
                             # No alive user is requesting that IP
                             print "Setting alive to False for IP: " + userIpMap.ip.name
@@ -61,3 +63,24 @@ class CleanInactiveUsers(CronJobBase):
                             userIpMap.ip.save()
                         else:
                             userIpMap.ip.update_min_poll_time()
+
+class FetchIpStatus(CronJobBase):
+        RUN_EVERY_MINS = 5;
+
+        schedule = Schedule(run_every_mins=RUN_EVERY_MINS)
+        code = 'dashboard:fetch_ip_stataus'
+
+        def create_url(ip, port):
+            return "http://" + ip + ":" + port + "/Snh_ItfReq"
+
+        def do(self):
+            Ip_object_list = Ip.objects.filter(alive = 1)
+            PORT = "8085"
+            for Ip_object in Ip_object_list:
+                url = create_url(Ip_object.name, PORT)
+
+                try:
+                    response = requests.head(url)
+                    Ip_object.status = response.status_code
+                except requests.ConnectionError:
+                    Ip_object.status = "Down"
