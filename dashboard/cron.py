@@ -1,6 +1,6 @@
 from django_cron import CronJobBase, Schedule
 from django.utils import timezone
-from datetime import timedelta
+from datetime import timedelta, datetime
 
 from django.contrib.sessions.models import Session
 from django.contrib.auth.models import User
@@ -65,22 +65,23 @@ class CleanInactiveUsers(CronJobBase):
                             userIpMap.ip.update_min_poll_time()
 
 class FetchIpStatus(CronJobBase):
-        RUN_EVERY_MINS = 5;
+        RUN_EVERY_MINS = 1;
 
         schedule = Schedule(run_every_mins=RUN_EVERY_MINS)
         code = 'dashboard:fetch_ip_stataus'
 
-        def create_url(ip, port):
-            return "http://" + ip + ":" + port + "/Snh_ItfReq"
-
         def do(self):
+            print "Fetching Ip status"
             Ip_object_list = Ip.objects.filter(alive = 1)
             PORT = "8085"
             for Ip_object in Ip_object_list:
-                url = create_url(Ip_object.name, PORT)
-
-                try:
-                    response = requests.head(url)
-                    Ip_object.status = response.status_code
-                except requests.ConnectionError:
-                    Ip_object.status = "Down"
+                if (Ip_object.last_fetched + timedelta(minutes=Ip_object.min_poll_time)) < timezone.now():
+                    url = "http://" + Ip_object.name + ":" + PORT + "/Snh_ItfReq"
+                    try:
+                        response = requests.head(url)
+                        Ip_object.status = response.status_code
+                    except requests.ConnectionError:
+                        Ip_object.status = "Down"
+                    Ip_object.last_fetched = timezone.now()
+                    Ip_object.save()
+                    print "Status set for : " + Ip_object.name 
