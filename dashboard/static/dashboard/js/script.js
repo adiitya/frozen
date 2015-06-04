@@ -1,8 +1,17 @@
+var dashboard = {};
+
+dashboard.source = {
+    delete_ip : "/delete_ip",
+    add_ip : "add_ip",
+    ip_status : "ip_status"
+}
+
+
 $(document).ready(function(){
     $('#add_ip_button').click(function() {
         $.ajax({
             type: "GET",
-            url: "/add_ip",
+            url: dashboard.source.add_ip,
             data: {
                 ip: $('#add_form [name="ip"]').val(),
                 polling_time: $('#add_form [name="polling_time"]').val()
@@ -19,7 +28,7 @@ $(document).ready(function(){
     $('#delete_ip_button').click(function() {
         $.ajax({
             type: "GET",
-            url: "/delete_ip",
+            url: dashboard.source.delete_ip,
             data: {
                 ip: $('#delete_form [name="ip"]').val()
             },
@@ -32,5 +41,20 @@ $(document).ready(function(){
         })
     });
 
-    
+    dashboard.updateIpStatus = {
+        action : function(ip){
+            $.get(dashboard.source.ip_status, function(data){
+                //Change data of corresponding tiles
+            });
+        }
+    };
+
+    dashboard.fetchData = {
+        action : function(ip, polling_time, last_fetched){
+            current_time = Math.floor((new Date).getTime()/1000);
+            //If current time is more than last fetched + polling time
+            if(current_time >= (last_fetched + polling_time*60))
+                dashboard.updateIpStatus.action(ip);    
+        }
+    };
 });
