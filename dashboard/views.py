@@ -76,11 +76,19 @@ def add_ip(request):
             return HttpResponse("IP field is blank")
         #Create an entry in client table
         try:
-            UserIpMap_object = UserIpMap.objects.get_or_create(client=request.user, ip=Ip_object, 
+            UserIpMap_object,created = UserIpMap.objects.get_or_create(client=request.user, ip=Ip_object, 
                                     defaults = {'polling_time': request.POST['polling_time']})
+            #If same IP existed before then this Ip is not created as new
+            if not created:
+                #Update polling time
+                UserIpMap_object.polling_time = request.POST['polling_time']
+                UserIpMap_object.save()
         except KeyError:
             return HttpResponse("Please provide all the fields.")
+
         Ip_object.update_min_poll_time()
+        
+
         return HttpResponse("Added IP")
     else:
         return HttpResponse("Request Metod Error")
