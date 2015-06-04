@@ -77,17 +77,17 @@ def add_ip(request):
         #Create an entry in client table
         try:
             UserIpMap_object,created = UserIpMap.objects.get_or_create(client=request.user, ip=Ip_object, 
-                                    defaults = {'polling_time': request.POST['polling_time']})
+                                    defaults = {'polling_time': request.GET['polling_time']})
             #If same IP existed before then this Ip is not created as new
             if not created:
                 #Update polling time
-                UserIpMap_object.polling_time = request.POST['polling_time']
+                UserIpMap_object.polling_time = request.GET['polling_time']
                 UserIpMap_object.save()
         except KeyError:
             return JsonResponse({'error': 'Please provide all the fields.'})
         Ip_object.update_min_poll_time()
         
-        return JsonResponse({'success': 'Added IP'})
+        return JsonResponse({'success': 'IP Added'})
     else:
         return JsonResponse({'error': 'Request Metod Error'})
 
@@ -137,8 +137,15 @@ def check_dead_make_ip_alive(request):
 def get_ip_by_user(request):
     if request.user.is_authenticated():
         Ip_list = UserIpMap.objects.filter(client = request.user)
-        ip_json = []
-        for Ip_list_object in Ip_list:
-            ip_json.append(Ip_list_object.ip.name)
-        return JsonResponse({'data':ip_json})
+        ip_json = {}
+        for count, Ip_list_object in enumerate(Ip_list):
+            data = { "address" : Ip_list_object.ip.name,
+                     "last_fetched" : Ip_list_object.ip.last_fetched,
+                     "min_poll_time" : Ip_list_object.ip.min_poll_time,
+                     "status" : Ip_list_object.ip.status
+                    }
+            ip_json[count] = data
+        return JsonResponse(ip_json)
+    else:
+        return JsonResponse("Login Required")
 

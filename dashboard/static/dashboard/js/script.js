@@ -15,6 +15,7 @@ $(document).ready(function(){
             }
         })
     });
+
     $('#delete_ip_button').click(function() {
         $.ajax({
             type: "GET",
@@ -30,4 +31,6 @@ $(document).ready(function(){
             }
         })
     });
+
+    
 });
