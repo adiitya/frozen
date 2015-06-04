@@ -68,12 +68,12 @@ def user_status(request):
         return JsonResponse({'error': 'IP does not exist'})
 
 def add_ip(request):
-    if request.method == 'POST':
+    if request.method == 'GET':
         #Fetch this IP object from central db or create one if not their    
         try: 
-            Ip_object, created = Ip.objects.get_or_create(name = request.POST['ip'])
+            Ip_object, created = Ip.objects.get_or_create(name = request.GET['ip'])
         except KeyError:
-            return HttpResponse("IP field is blank")
+            return JsonResponse({'error': 'IP field is blank'})
         #Create an entry in client table
         try:
             UserIpMap_object,created = UserIpMap.objects.get_or_create(client=request.user, ip=Ip_object, 
@@ -84,32 +84,30 @@ def add_ip(request):
                 UserIpMap_object.polling_time = request.POST['polling_time']
                 UserIpMap_object.save()
         except KeyError:
-            return HttpResponse("Please provide all the fields.")
-
+            return JsonResponse({'error': 'Please provide all the fields.'})
         Ip_object.update_min_poll_time()
         
-
-        return HttpResponse("Added IP")
+        return JsonResponse({'success': 'Added IP'})
     else:
-        return HttpResponse("Request Metod Error")
+        return JsonResponse({'error': 'Request Metod Error'})
 
 
 def delete_ip(request):
-    if request.method == 'POST' and 'ip' in request.POST:
+    if request.method == 'GET' and 'ip' in request.GET:
         #delete entry from client table.
         try:
-            Ip_object = Ip.objects.get(name = request.POST['ip'])
+            Ip_object = Ip.objects.get(name = request.GET['ip'])
         except:
-            return HttpResponse("No Ip exist in main server table")
+            return JsonResponse({"error": "No Ip exist in main server table"})
         try:
             UserIpMap.objects.filter(client = request.user, ip = Ip_object ).delete()
         except:
-            return HttpResponse("No Ip exist in UserIpMap table")
+            return JsonResponse({"error": "No Ip exist in UserIpMap table"})
         #If no other user has requested for this IP then delete it from main table as well
         if not UserIpMap.objects.filter(ip = Ip_object).exists():
             Ip.objects.filter(name = Ip_object.name).delete()
         #LATER redirect to home and also validate Ip
-        return HttpResponse("IP deleted")
+        return JsonResponse({"success": "IP deleted"})
 
 def set_access(request):
     #Check if user is logged in or not

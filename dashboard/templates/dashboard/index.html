@@ -1,20 +1,17 @@
-{% if alert_message %}
-	<h2>
-		{{alert_message}}
-	</h2>
-{% endif %}
+<script src="static/dashboard/js/jquery-1.11.3.min.js"></script>
+<script src="static/dashboard/js/script.js"></script>
 
-<form action="{% url 'dashboard:addIp' %}" method="POST">
-	{% csrf_token %}
+<form id="add_form">
 	IP: <input type="text" name="ip"/><br/>
 	Polling time: <input type="text" name="polling_time" /><br/>
-	<input type="submit" value="Add IP" />
+	<p id = "add_response"></p>
+	<input type="button" value="Add IP" id="add_ip_button"/>
 </form>
 
-<form action="{% url 'dashboard:deleteIp' %}" method="POST">
-	{% csrf_token %}
+<form id="delete_form">
 	IP: <input type="text" name="ip"/><br/>
-	<input type="submit" value="Delete IP" />
+	<p id = "delete_response"></p>
+	<input type="button" value="Delete IP" id="delete_ip_button" />
 </form>
 
 
