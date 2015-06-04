@@ -7,7 +7,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.template import RequestContext, loader
 from django.utils import timezone
 from datetime import datetime
-import json
+import json, time
 
 # Create your views here.
 
@@ -140,7 +140,7 @@ def get_ip_by_user(request):
         ip_json = {}
         for count, Ip_list_object in enumerate(Ip_list):
             data = { "address" : Ip_list_object.ip.name,
-                     "last_fetched" : Ip_list_object.ip.last_fetched,
+                     "last_fetched" : int(time.mktime(Ip_list_object.ip.last_fetched.timetuple())*1000),
                      "min_poll_time" : Ip_list_object.ip.min_poll_time,
                      "status" : Ip_list_object.ip.status
                     }
