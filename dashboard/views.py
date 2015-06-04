@@ -7,6 +7,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.template import RequestContext, loader
 from django.utils import timezone
 from datetime import datetime
+import json
 
 # Create your views here.
 
@@ -126,3 +127,12 @@ def check_dead_make_ip_alive(request):
             Ip_object.save()
             Ip_object.update_min_poll_time()
     return HttpResponse("Done")
+
+def get_ip_by_user(request):
+    if request.user.is_authenticated():
+        Ip_list = UserIpMap.objects.filter(client = request.user)
+        ip_json = []
+        for Ip_list_object in Ip_list:
+            ip_json.append(Ip_list_object.ip.name)
+        return JsonResponse({'data':ip_json})
+
