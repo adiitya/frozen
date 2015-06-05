@@ -1,17 +1,41 @@
-<script src="static/dashboard/js/jquery-1.11.3.min.js"></script>
-<script src="static/dashboard/js/script.js"></script>
+<html>
+	<head>
+		<script src="static/dashboard/js/jquery-1.11.3.min.js"></script>
+		<script src="static/dashboard/js/script.js"></script>
+		<script src="static/dashboard/js/application.js"></script>
 
-<form id="add_form">
-	IP: <input type="text" name="ip"/><br/>
-	Polling time: <input type="text" name="polling_time" /><br/>
-	<p id = "add_response"></p>
-	<input type="button" value="Add IP" id="add_ip_button"/>
-</form>
+		<link rel="stylesheet" href="static/dashboard/stylesheets/application.css">
+		
+		<title>Dashboard</title>
+	</head>
 
-<form id="delete_form">
-	IP: <input type="text" name="ip"/><br/>
-	<p id = "delete_response"></p>
-	<input type="button" value="Delete IP" id="delete_ip_button" />
-</form>
+	<body>
+		<div id="left-pane">
+			<form id="add_form">
+				IP: <input type="text" name="ip"/><br/>
+				Polling time: <input type="text" name="polling_time" /><br/>
+				<p id = "add_response"></p>
+				<input type="button" value="Add IP" id="add_ip_button"/>
+			</form>
 
-
+			<form id="delete_form">
+				IP: <input type="text" name="ip"/><br/>
+				<p id = "delete_response"></p>
+				<input type="button" value="Delete IP" id="delete_ip_button" />
+			</form>
+		</div>
+		<div id="status-pane">
+			<div class="gridster">
+				<ul>
+			    <li data-row="1" data-col="1" data-sizex="1" data-sizey="1">
+			      <div data-view="Number" style="background-color:#96bf48;">LOL</div>
+			    </li>
+			 
+			    <li data-row="1" data-col="1" data-sizex="1" data-sizey="1">
+			      <div data-view="Number">7</div>
+			    </li>
+			  </ul>
+			</div>
+		</div>
+	</body>
+</html>
