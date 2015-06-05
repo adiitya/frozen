@@ -10,5 +10,6 @@ urlpatterns = [
   url(r'^add_ip/$', views.add_ip, name='addIp'),
   url(r'^delete_ip/$', views.delete_ip, name='deleteIp'),
   url(r'^list_ip/$', views.get_ip_by_user, name='listIp'),
+  url(r'^ip_status/$', views.get_status_by_ip, name='statusIp'),
   url(r'^$', views.index, name='home'),
 ]

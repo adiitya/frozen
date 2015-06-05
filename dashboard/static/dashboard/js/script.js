@@ -2,8 +2,8 @@ var dashboard = {};
 
 dashboard.source = {
     delete_ip : "/delete_ip",
-    add_ip : "add_ip",
-    ip_status : "ip_status"
+    add_ip : "/add_ip",
+    ip_status : "/ip_status"
 }
 
 
@@ -38,13 +38,20 @@ $(document).ready(function(){
                 else
                     $('#delete_response').html(data['success']);
             }
-        })
+        });
     });
 
     dashboard.updateIpStatus = {
         action : function(ip){
-            $.get(dashboard.source.ip_status, function(data){
-                //Change data of corresponding tiles
+            $.ajax({
+                type: "GET",
+                url: dashboard.source.ip_status,
+                data: {
+                    ip: ip
+                },
+                success: function(data) { 
+                   //Change data of corresponding tiles 
+                }
             });
         }
     };

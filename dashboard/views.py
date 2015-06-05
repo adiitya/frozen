@@ -1,5 +1,6 @@
 from django.views import generic
 from django.core.urlresolvers import reverse
+from django.core import serializers
 from django.shortcuts import render , get_object_or_404
 from django.http import HttpResponse, Http404, HttpResponseRedirect, JsonResponse
 from .models import Ip, UserIpMap, UserProfile
@@ -148,4 +149,14 @@ def get_ip_by_user(request):
         return JsonResponse(ip_json)
     else:
         return JsonResponse("Login Required")
+
+def get_status_by_ip(request):
+    if request.user.is_authenticated():
+        try:
+            Ip_object = Ip.objects.filter(name = request.GET['ip'])
+            Ip_object = serializers.serialize("json", Ip_object)
+            Ip_object = Ip_object.strip("[]")
+            return HttpResponse(Ip_object)
+        except :
+            return JsonResponse({"error" : "Can't find any data corresponding to this IP"})
 
