@@ -3,7 +3,7 @@ var dashboard = {};
 dashboard.source = {
     delete_ip : "/delete_ip",
     add_ip : "/add_ip",
-    ip_status : "/ip_status"
+    ip_status : "/status"
 }
 
 

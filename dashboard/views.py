@@ -54,7 +54,7 @@ def user_logout(request):
 
     return HttpResponse('Successfully logged out')
 
-def user_status(request):
+def ip_status(request):
     ip_address = request.GET['ip']
     try:
         Ip_object =Ip.objects.get(name=ip_address)
@@ -149,14 +149,3 @@ def get_ip_by_user(request):
         return JsonResponse(ip_json)
     else:
         return JsonResponse("Login Required")
-
-def get_status_by_ip(request):
-    if request.user.is_authenticated():
-        try:
-            Ip_object = Ip.objects.filter(name = request.GET['ip'])
-            Ip_object = serializers.serialize("json", Ip_object)
-            Ip_object = Ip_object.strip("[]")
-            return HttpResponse(Ip_object)
-        except :
-            return JsonResponse({"error" : "Can't find any data corresponding to this IP"})
-
