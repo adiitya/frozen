@@ -61,7 +61,7 @@ def ip_status(request):
         if not Ip_object.alive:
             return JsonResponse({'error': 'IP entry is dead'})
         response_data = {}
-        response_data['name'] = ip_address.name
+        response_data['name'] = Ip_object.name
         response_data['status'] = Ip_object.status
         response_data['last_fetched'] = Ip_object.last_fetched
         return JsonResponse(response_data)
