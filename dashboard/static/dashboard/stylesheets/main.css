@@ -1,0 +1,8 @@
+#left-pane {
+    position: fixed;
+    width: 15%;
+}
+
+#status-pane {
+    margin-left: 15%;
+}
