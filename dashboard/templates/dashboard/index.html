@@ -4,26 +4,28 @@
 		<script src="static/dashboard/js/script.js"></script>
 		<script src="static/dashboard/js/application.js"></script>
 
-		<link rel="stylesheet" href="static/dashboard/stylesheets/application.css">
-		<link rel="stylesheet" href="static/dashboard/stylesheets/main.css">
+		<link rel="stylesheet" href="/static/dashboard/stylesheets/application.css">
+		<link rel="stylesheet" href="/static/dashboard/stylesheets/main.css">
 		
 		<title>Dashboard</title>
 	</head>
 
 	<body>
 		<div id="left-pane">
-			<form id="add_form">
-				IP: <input type="text" name="ip"/><br/>
-				Polling time: <input type="text" name="polling_time" /><br/>
-				<p id = "add_response"></p>
-				<input type="button" value="Add IP" id="add_ip_button"/>
-			</form>
+			<div id="left-pane-content">
+				<form id="add_form">
+					<input type="text" name="ip" placeholder="IP"/><br/>
+					<input type="text" name="polling_time" placeholder="Polling time" /><br/>
+					<p id = "add_response"></p>
+					<input type="button" value="Add IP" id="add_ip_button"/>
+				</form>
 
-			<form id="delete_form">
-				IP: <input type="text" name="ip"/><br/>
-				<p id = "delete_response"></p>
-				<input type="button" value="Delete IP" id="delete_ip_button" />
-			</form>
+				<form id="delete_form">
+					<input type="text" name="ip" placeholder="IP"/><br/>
+					<p id = "delete_response"></p>
+					<input type="button" value="Delete IP" id="delete_ip_button" />
+				</form>
+			</div>
 		</div>
 		<div id="status-pane">
 			<div class="gridster">

@@ -1,6 +1,33 @@
 #left-pane {
     position: fixed;
     width: 15%;
+    height: 100%;
+    background-color: #444;
+}
+
+#left-pane-content {
+    width: 100%;
+    height: 100%;
+    margin-top: 100%;
+    text-align: center;
+}
+
+#left-pane-content form {
+    padding: 10px 0px;
+}
+
+#left-pane-content form input {
+    margin: 2px;
+}
+
+#left-pane-content form input[type=text] {
+    border-radius: 10px;
+    padding: 7px;
+}
+
+#left-pane-content form input[type=button] {
+    border-radius: 15px;
+    padding: 7px;
 }
 
 #status-pane {
