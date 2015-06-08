@@ -96,6 +96,7 @@ $(document).ready(function(){
             max_row++;
             var tile = '<li id = "'+Ipdata['name']+'" data-row="'+ max_row +'" data-col="1" data-sizex="1" data-sizey="1" class="gs_w">'
                       +'<div class="down widget widget-number undefined">'
+                      +'<h2 class="value" data-bind="current | shortenedNumber | prepend prefix">UNAVAILABLE</h2>'
                       +'<h1 class="title" data-bind="title">'+Ipdata['name']+'</h1>'
                       +'<p class="updated-at" data-bind="updatedAtMessage">Status not available currently</p>'
                       +'</div>'

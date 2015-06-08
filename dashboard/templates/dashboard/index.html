@@ -37,16 +37,19 @@
 				    <li id = "{{ IP.name }}" data-row="1" data-col="1" data-sizex="1" data-sizey="1">
 				    	{% if IP.status = "200" %}
 				    		<div data-view="Number" class="up-{{ forloop.counter0|mod:4 }}">
+				    			<h2 class="value" data-bind="current | shortenedNumber | prepend prefix">UP</h2>
 					    		<h1 class="title" data-bind="title">{{ IP.name }}</h1>
 					    		<p class="updated-at" data-bind="updatedAtMessage">Last fetched: {{ IP.last_fetched }}</p>
 				    		</div>
 				    	{% elif IP.status = null %}
 				    		<div data-view="Number" class="down">
+				    			<h2 class="value" data-bind="current | shortenedNumber | prepend prefix">UNAVAILABLE</h2>
 					    		<h1 class="title" data-bind="title">{{ IP.name }}</h1>
 					    		<p class="updated-at" data-bind="updatedAtMessage">Status not available currently</p>
 				    		</div>
 				    	{% else %}
 				    		<div data-view="Number" class="down">
+				    			<h2 class="value" data-bind="current | shortenedNumber | prepend prefix">DOWN</h2>
 				    			<h1 class="title" data-bind="title">{{ IP.name }}</h1>
 					    		<p class="updated-at" data-bind="updatedAtMessage">Last fetched: {{ IP.last_fetched }}</p>
 				    		</div>
