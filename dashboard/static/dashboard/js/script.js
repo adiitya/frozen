@@ -106,7 +106,7 @@ $(document).ready(function(){
             });
         },
         remove : function(ip){  
-
+            $('#'+ip).remove();
         }
     };
 
