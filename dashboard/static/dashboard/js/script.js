@@ -57,7 +57,7 @@ $(document).ready(function(){
                     max_row = row;
             });
             var tile = '<li data-row="'+ max_row+1 +'" data-col="1" data-sizex="1" data-sizey="1" class="gs_w">'
-                      +'<div data-view="Number" id = "'+Ipdata['name']+'">'+Ipdata['status']+'</div>'
+                      +'<div data-view="Number" id = "'+Ipdata['name']+'" class="down widget widget-number undefined">'+Ipdata['status']+'</div>'
                       +'</li>';
             return tile;
         }

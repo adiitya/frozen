@@ -30,9 +30,14 @@
 		<div id="status-pane">
 			<div class="gridster">
 				<ul id="tiles">
-					{% for IP in IPs %}
+				{% load mathfilters %}
+				{% for IP in IPs %}
 				    <li data-row="1" data-col="1" data-sizex="1" data-sizey="1">
-				      <div data-view="Number" style="background-color:#96bf48;">{{ IP.name }}</div>
+				    	{% if IP.status = "200" %}
+				    		<div data-view="Number" class="up-{{ forloop.counter0|mod:4 }}">{{ IP.name }}</div>
+				    	{% else %}
+				    		<div data-view="Number" class="down">{{ IP.name }}</div>
+				    	{% endif %}
 				    </li>
 				{% endfor %}
 			    </ul>
