@@ -13,7 +13,11 @@ import json, time
 # Create your views here.
 
 def index(request):
-        return render(request, 'dashboard/index.html')
+    UserIpMaps = UserIpMap.objects.filter(client = request.user)
+    IPs = []
+    for userIpMap in UserIpMaps:
+        IPs.append(userIpMap.ip)
+    return render(request, 'dashboard/index.html', {'IPs' : IPs})
 
 
 def user_login(request):
