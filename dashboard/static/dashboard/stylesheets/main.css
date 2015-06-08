@@ -34,6 +34,10 @@
     margin-left: 15%;
 }
 
+#tiles h1 {
+    font-size: 120%;
+}
+
 .up-0 {
     background-color: #ec663c;
 }
