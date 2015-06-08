@@ -106,7 +106,7 @@ $(document).ready(function(){
             dashboard.fetchIpData.action(ip,function(Ipdata){
                 tile = dashboard.manageTile.create(Ipdata);
                 $('#tiles').append(tile);
-            });
+            }) ;
         },
         remove : function(ip){  
             $('#'+ip).remove();
