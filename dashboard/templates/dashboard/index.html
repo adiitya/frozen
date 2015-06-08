@@ -30,67 +30,11 @@
 		<div id="status-pane">
 			<div class="gridster">
 				<ul>
+				{% for IP in IPs %}
 			    <li data-row="1" data-col="1" data-sizex="1" data-sizey="1">
-			      <div data-view="Number" style="background-color:#96bf48;">LOL</div>
+			      <div data-view="Number" style="background-color:#96bf48;">{{ IP.name }}</div>
 			    </li>
-			 
-			    <li data-row="1" data-col="1" data-sizex="1" data-sizey="1">
-			      <div data-view="Number">7</div>
-			    </li>
-			    <li data-row="1" data-col="1" data-sizex="1" data-sizey="1">
-			      <div data-view="Number">7</div>
-			    </li>
-			    <li data-row="1" data-col="1" data-sizex="1" data-sizey="1">
-			      <div data-view="Number">7</div>
-			    </li>
-			    <li data-row="1" data-col="1" data-sizex="1" data-sizey="1">
-			      <div data-view="Number">7</div>
-			    </li>
-			    <li data-row="1" data-col="1" data-sizex="1" data-sizey="1">
-			      <div data-view="Number">7</div>
-			    </li>
-			    <li data-row="1" data-col="1" data-sizex="1" data-sizey="1">
-			      <div data-view="Number">7</div>
-			    </li>
-			    <li data-row="1" data-col="1" data-sizex="1" data-sizey="1">
-			      <div data-view="Number">7</div>
-			    </li>
-			    <li data-row="1" data-col="1" data-sizex="1" data-sizey="1">
-			      <div data-view="Number">7</div>
-			    </li>
-			    <li data-row="1" data-col="1" data-sizex="1" data-sizey="1">
-			      <div data-view="Number">7</div>
-			    </li>
-			    <li data-row="1" data-col="1" data-sizex="1" data-sizey="1">
-			      <div data-view="Number">7</div>
-			    </li>
-			    <li data-row="1" data-col="1" data-sizex="1" data-sizey="1">
-			      <div data-view="Number">7</div>
-			    </li>
-			    <li data-row="1" data-col="1" data-sizex="1" data-sizey="1">
-			      <div data-view="Number">7</div>
-			    </li>
-			    <li data-row="1" data-col="1" data-sizex="1" data-sizey="1">
-			      <div data-view="Number">7</div>
-			    </li>
-			    <li data-row="1" data-col="1" data-sizex="1" data-sizey="1">
-			      <div data-view="Number">7</div>
-			    </li>
-			    <li data-row="1" data-col="1" data-sizex="1" data-sizey="1">
-			      <div data-view="Number">7</div>
-			    </li>
-			    <li data-row="1" data-col="1" data-sizex="1" data-sizey="1">
-			      <div data-view="Number">7</div>
-			    </li>
-			    <li data-row="1" data-col="1" data-sizex="1" data-sizey="1">
-			      <div data-view="Number">7</div>
-			    </li>
-			    <li data-row="1" data-col="1" data-sizex="1" data-sizey="1">
-			      <div data-view="Number">7</div>
-			    </li>
-			    <li data-row="1" data-col="1" data-sizex="1" data-sizey="1">
-			      <div data-view="Number">7</div>
-			    </li>
+				{% endfor %}
 			  </ul>
 			</div>
 		</div>
