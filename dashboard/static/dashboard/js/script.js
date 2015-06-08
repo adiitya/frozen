@@ -94,8 +94,11 @@ $(document).ready(function(){
                     max_row = row;
             });
             max_row++;
-            var tile = '<li data-row="'+ max_row +'" data-col="1" data-sizex="1" data-sizey="1" class="gs_w">'
-                      +'<div data-view="Number" id = "'+Ipdata['name']+'" class="down widget">'+Ipdata['status']+'</div>'
+            var tile = '<li id = "'+Ipdata['name']+'" data-row="'+ max_row +'" data-col="1" data-sizex="1" data-sizey="1" class="gs_w">'
+                      +'<div class="down widget widget-number undefined">'
+                      +'<h1 class="title" data-bind="title">'+Ipdata['name']+'</h1>'
+                      +'<p class="updated-at" data-bind="updatedAtMessage">Status not available currently</p>'
+                      +'</div>'
                       +'</li>';
             return tile;
         },

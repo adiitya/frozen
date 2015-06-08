@@ -32,11 +32,22 @@
 				<ul id="tiles">
 				{% load mathfilters %}
 				{% for IP in IPs %}
-				    <li data-row="1" data-col="1" data-sizex="1" data-sizey="1">
+				    <li id = "{{ IP.name }}" data-row="1" data-col="1" data-sizex="1" data-sizey="1">
 				    	{% if IP.status = "200" %}
-				    		<div data-view="Number" class="up-{{ forloop.counter0|mod:4 }}">{{ IP.name }}</div>
+				    		<div data-view="Number" class="up-{{ forloop.counter0|mod:4 }}">
+					    		<h1 class="title" data-bind="title">{{ IP.name }}</h1>
+					    		<p class="updated-at" data-bind="updatedAtMessage">Last fetched: {{ IP.last_fetched }}</p>
+				    		</div>
+				    	{% elif IP.status = null %}
+				    		<div data-view="Number" class="down">
+					    		<h1 class="title" data-bind="title">{{ IP.name }}</h1>
+					    		<p class="updated-at" data-bind="updatedAtMessage">Status not available currently</p>
+				    		</div>
 				    	{% else %}
-				    		<div data-view="Number" class="down">{{ IP.name }}</div>
+				    		<div data-view="Number" class="down">
+				    			<h1 class="title" data-bind="title">{{ IP.name }}</h1>
+					    		<p class="updated-at" data-bind="updatedAtMessage">Last fetched: {{ IP.last_fetched }}</p>
+				    		</div>
 				    	{% endif %}
 				    </li>
 				{% endfor %}
