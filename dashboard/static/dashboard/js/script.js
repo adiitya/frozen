@@ -1,13 +1,15 @@
-var dashboard = {};
-
-dashboard.source = {
-    delete_ip : "/delete_ip",
-    add_ip : "/add_ip",
-    ip_status : "/status"
-}
-
 
 $(document).ready(function(){
+
+    var dashboard = {};
+
+    dashboard.source = {
+        delete_ip : "/delete_ip",
+        add_ip : "/add_ip",
+        ip_status : "/status",
+        list_ip : "/list_ip"
+    }
+
     $('#add_ip_button').click(function() {
         $.ajax({
             type: "GET",
@@ -41,27 +43,59 @@ $(document).ready(function(){
         });
     });
 
-    dashboard.updateIpStatus = {
-        action : function(ip){
+
+    dashboard.makeTile = {
+        action : function(Ipdata){
+            var tile = '<li data-row="1" data-col="1" data-sizex="1" data-sizey="1">'
+                      +'<div data-view="Number" id = "'+Ipdata['name']+'" data-title = "'+ Ipdata['name'] +'">'+Ipdata['status']+'</div>'
+                      +'</li>';
+            return tile;
+        }
+    };
+
+    dashboard.fetchIpData = {
+        action : function(ip,handleData){
             $.ajax({
                 type: "GET",
-                url: dashboard.source.ip_status,
-                data: {
-                    ip: ip
+                url : dashboard.source.ip_status,
+                data : {
+                    ip : ip
                 },
-                success: function(data) { 
-                   //Change data of corresponding tiles 
+                success : function(data){
+                    handleData(data);
+                },
+                error : function(){
+
                 }
             });
         }
     };
-
-    dashboard.fetchData = {
-        action : function(ip, polling_time, last_fetched){
-            current_time = Math.floor((new Date).getTime()/1000);
-            //If current time is more than last fetched + polling time
-            if(current_time >= (last_fetched + polling_time*60))
-                dashboard.updateIpStatus.action(ip);    
+    
+    /*dashboard.renderHomeScreen = {
+        action : function(){
+            $.get(dashboard.source.list_ip, function(Ip){
+                var mainHtml = '',
+                total = Object.keys(Ip).length,count=0;
+                for(var key in Ip){
+                    dashboard.fetchIpData.action(Ip[key]['address'],function(Ipdata){
+                        tile = dashboard.makeTile.action(Ipdata);
+                        console.log(tile);
+                        $('#tiles').append(tile);
+                    });
+                }   
+            });
         }
     };
+
+    dashboard.renderHomeScreen.action();*/
+
+    dashboard.updateIpStatus = {
+        action : function(ip){
+            data = dashboard.fetchIpData.action(ip);
+            $('#'+ip).html(data[status]);
+            //Update timeout for this tile
+        }
+    };
+
+
 });
