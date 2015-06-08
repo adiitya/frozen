@@ -33,3 +33,22 @@
 #status-pane {
     margin-left: 15%;
 }
+
+.up-0 {
+    background-color: #ec663c;
+}
+.up-1 {
+    background-color: #96bf48;
+}
+
+.up-2 {
+    background-color: #12b0c5;
+}
+
+.up-3 {
+    background-color: #9c4274;
+}
+
+.down {
+    background-color: #999;
+}
