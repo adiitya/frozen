@@ -21,8 +21,12 @@ $(document).ready(function(){
             success: function(data) {
                 if(data['error'])
                     $('#add_response').html('<b>'+data['error']+'</b>');
-                else
+                else{
                     $('#add_response').html(data['success']);
+                    dashboard.addTile.action($('#add_form [name="ip"]').val());
+                    $('#add_form [name="ip"]').val('');
+                    $('#add_form [name="polling_time"]').val('');
+                }
             }
         })
     });
@@ -46,8 +50,14 @@ $(document).ready(function(){
 
     dashboard.makeTile = {
         action : function(Ipdata){
-            var tile = '<li data-row="1" data-col="1" data-sizex="1" data-sizey="1">'
-                      +'<div data-view="Number" id = "'+Ipdata['name']+'" data-title = "'+ Ipdata['name'] +'">'+Ipdata['status']+'</div>'
+            var max_row =1;
+            $("#tiles").find('li').each(function(li){
+                row = parseInt($(this).attr("data-row"));
+                if(row>max_row)
+                    max_row = row;
+            });
+            var tile = '<li data-row="'+ max_row+1 +'" data-col="1" data-sizex="1" data-sizey="1" class="gs_w">'
+                      +'<div data-view="Number" id = "'+Ipdata['name']+'">'+Ipdata['status']+'</div>'
                       +'</li>';
             return tile;
         }
@@ -88,6 +98,14 @@ $(document).ready(function(){
     };
 
     dashboard.renderHomeScreen.action();*/
+    dashboard.addTile = {
+        action : function(ip){
+            dashboard.fetchIpData.action(ip,function(Ipdata){
+                tile = dashboard.makeTile.action(Ipdata);
+                $('#tiles').append(tile);
+            });
+        }
+    };
 
     dashboard.updateIpStatus = {
         action : function(ip){
