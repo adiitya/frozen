@@ -39,8 +39,9 @@
 			<div class="gridster">
 				<ul id="tiles">
 				{% load mathfilters %}
+				{% load app_filters %}
 				{% for IP in IPs %}
-				    <li id = "{{ IP.name }}" data-row="1" data-col="1" data-sizex="1" data-sizey="1">
+				    <li id = "{{ IP.name|replace:'.' }}" data-row="1" data-col="1" data-sizex="1" data-sizey="1">
 				    	{% if IP.status = "200" %}
 				    		<div data-view="Number" class="up-{{ forloop.counter0|mod:4 }}">
 				    			<h2 class="value" data-bind="current | shortenedNumber | prepend prefix">UP</h2>
