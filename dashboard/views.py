@@ -68,6 +68,7 @@ def ip_status(request):
         response_data['name'] = Ip_object.name
         response_data['status'] = Ip_object.status
         response_data['last_fetched'] = Ip_object.last_fetched
+        response_data['min_poll_time'] = Ip_object.min_poll_time
         return JsonResponse(response_data)
     except:
         return JsonResponse({'error': 'IP does not exist'})
