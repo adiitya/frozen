@@ -28,6 +28,9 @@ $(document).ready(function(){
                     $('#add_form [name="ip"]').val('');
                     $('#add_form [name="polling_time"]').val('');
                 }
+                setTimeout(function() {
+                    $('#add_response').html('');
+                }, 2000);
             }
         })
     });
@@ -47,6 +50,9 @@ $(document).ready(function(){
                     dashboard.manageTile.remove($('#delete_form [name="ip"]').val());
                     $('#delete_form [name="ip"]').val('');
                 }
+                setTimeout(function() {
+                    $('#delete_response').html('');
+                }, 2000);
             }
         });
     });
