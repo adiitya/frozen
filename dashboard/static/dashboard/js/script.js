@@ -88,14 +88,28 @@ $(document).ready(function(){
 
     dashboard.manageTile = {
         create : function(Ipdata){
-            var max_row =1;
+            var row = 1, col = 1, last_col = 0, flag = 0;
             $("#tiles").find('li').each(function(li){
                 row = parseInt($(this).attr("data-row"));
-                if(row>max_row)
-                    max_row = row;
+                col = parseInt($(this).attr("data-col"));
+                if((last_col+1)!=col && (col+4)!=last_col)
+                {   flag = 1;
+                    col--;
+                    if(col==0) {
+                        row--;
+                        col = 5;
+                    }
+                    return false;
+                }
+                last_col = col;
             });
-            max_row++;
-             var tile = '<li id = "'+dashboard.helpers.transformIp(Ipdata['name'])+'" data-row="'+ max_row +'" data-col="1" data-sizex="1" data-sizey="1" class="gs_w">'
+            if(flag==0)
+                col++;
+            if(col==6) {
+                col = 1;
+                row++;
+            }
+            var tile = '<li id = "'+dashboard.helpers.transformIp(Ipdata['name'])+'" data-row="'+ row +'" data-col="' + col + '" data-sizex="1" data-sizey="1" class="gs_w">'
                       +'<div class="down widget widget-number undefined">'
                       +'<h2 class="value" data-bind="current | shortenedNumber | prepend prefix">N/A</h2>'
                       +'<h1 class="title" data-bind="title">'+Ipdata['name']+'</h1>'
