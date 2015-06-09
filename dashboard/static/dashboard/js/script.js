@@ -108,34 +108,37 @@ $(document).ready(function(){
         remove : function(ip){  
             $('#'+dashboard.helpers.transformIp(ip)).remove();
         },
-        //
+        //Starts the loop for the attched updater
         startUpdateTimer : function(ip, polling_time){
             var ip = ip;//This ip is separated with "_" instead of "." ! Change if required using helpers
             setTimeout(function(){
                 dashboard.manageTile.updateTile(dashboard.helpers.reversetransformIp(ip));
+                dashboard.manageTile.updateTile(ip);
                 //Again call the same function in a timeout loop
                 dashboard.manageTile.startUpdateTimer(ip,parseInt(polling_time));
-            },polling_time*1000);
+            },(5*60000));
         },
-        //Initialises update timer for all tiles
-        attachTileUpdater : function(){
+        //Calls update timer for all tiles previously loaded
+        callUpdaterForEachTile : function(){
             $("#tiles").find('li').each(function(li){
                 ip = $(this).attr("id");
                 dashboard.manageTile.startUpdateTimer(ip,ip_time_map['ip']);
             });
         },
-        updateTile : function(){
-
+        updateTile : function(ip){    
+            data = dashboard.fetchIpData.action(dashboard.helpers.reversetransformIp(ip),function(Ipdata){
+                var stat = '';
+                if(Ipdata['status']==null)
+                    stat = "N/A";
+                else if(Ipdata['status']=="200")
+                    stat = "UP";
+                else
+                    stat = "DOWN";
+                $('#'+ip+' div h2').html(stat);
+                console.log("aa");
+            });
         }
     };
 
-    dashboard.updateIpStatus = {
-        action : function(ip){
-            data = dashboard.fetchIpData.action(ip);
-            $('#'+ip).html(data[status]);
-            //Update timeout for this tile
-        }
-    };
-
-
+    dashboard.manageTile.callUpdaterForEachTile();
 });
