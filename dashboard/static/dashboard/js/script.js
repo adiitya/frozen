@@ -22,7 +22,9 @@ $(document).ready(function(){
                     $('#add_response').html('<b>'+data['error']+'</b>');
                 else{
                     $('#add_response').html(data['success']);
-                    dashboard.manageTile.add($('#add_form [name="ip"]').val());
+                    //If Ip was new then add a new tile
+                    if(!('duplicate' in data))
+                        dashboard.manageTile.add($('#add_form [name="ip"]').val());
                     $('#add_form [name="ip"]').val('');
                     $('#add_form [name="polling_time"]').val('');
                 }

@@ -92,8 +92,10 @@ def add_ip(request):
         except KeyError:
             return JsonResponse({'error': 'Please provide all the fields.'})
         Ip_object.update_min_poll_time()
-        
-        return JsonResponse({'success': 'IP Added'})
+        if created :
+            return JsonResponse({'success': 'IP Added'})
+        else :
+            return JsonResponse({'success': 'IP already exist','duplicate':'true'})
     else:
         return JsonResponse({'error': 'Request Metod Error'})
 
