@@ -17,7 +17,7 @@ def index(request):
     IPs = []
     for userIpMap in UserIpMaps:
         IPs.append(userIpMap.ip)
-    return render(request, 'dashboard/index.html', {'IPs' : IPs})
+    return render(request, 'dashboard/index.html', {'IPs' : IPs, 'user' : request.user})
 
 
 def user_login(request):
@@ -56,7 +56,7 @@ def user_settings(request):
 def user_logout(request):
     logout(request)
 
-    return HttpResponse('Successfully logged out')
+    return HttpResponseRedirect(reverse('dashboard:login'))
 
 def ip_status(request):
     ip_address = request.GET['ip']
