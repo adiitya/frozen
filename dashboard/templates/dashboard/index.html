@@ -2,11 +2,11 @@
 	<head>
 		<script src="static/dashboard/js/jquery-1.11.3.min.js"></script>
 		<script>
-		var map = {};
+		var ip_time_map = {};
     	{% for IP in IPs %}
 	        ip_time_map[{{ IP.name }}] = {{ IP.min_poll_time}};
     	{% endfor %}
-    	</script
+    	</script>
 		<script src="static/dashboard/js/script.js"></script>
 		<script src="static/dashboard/js/application.js"></script>
 
@@ -43,21 +43,18 @@
 				    <li id = "{{ IP.name }}" data-row="1" data-col="1" data-sizex="1" data-sizey="1">
 				    	{% if IP.status = "200" %}
 				    		<div data-view="Number" class="up-{{ forloop.counter0|mod:4 }}">
-				    			<p id="hidden_poll_time">{{ IP.min_poll_time }}</p>
 				    			<h2 class="value" data-bind="current | shortenedNumber | prepend prefix">UP</h2>
 					    		<h1 class="title" data-bind="title">{{ IP.name }}</h1>
 					    		<p class="updated-at" data-bind="updatedAtMessage">Last fetched: {{ IP.last_fetched }}</p>
 				    		</div>
 				    	{% elif IP.status = null %}
 				    		<div data-view="Number" class="down">
-				    			<p id="hidden_poll_time">{{ IP.min_poll_time }}</p>
 				    			<h2 class="value" data-bind="current | shortenedNumber | prepend prefix">N/A</h2>
 					    		<h1 class="title" data-bind="title">{{ IP.name }}</h1>
 					    		<p class="updated-at" data-bind="updatedAtMessage">Status not available currently</p>
 				    		</div>
 				    	{% else %}
 				    		<div data-view="Number" class="down">
-				    			<p id="hidden_poll_time">{{ IP.min_poll_time }}</p>
 				    			<h2 class="value" data-bind="current | shortenedNumber | prepend prefix">DOWN</h2>
 				    			<h1 class="title" data-bind="title">{{ IP.name }}</h1>
 					    		<p class="updated-at" data-bind="updatedAtMessage">Last fetched: {{ IP.last_fetched }}</p>
