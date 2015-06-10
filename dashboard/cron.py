@@ -74,14 +74,19 @@ class FetchIpStatus(CronJobBase):
             print "Fetching Ip status"
             Ip_object_list = Ip.objects.filter(alive = 1)
             PORT = "8085"
+            TIMOEOUT = 2    # 2 seconds
             for Ip_object in Ip_object_list:
                 if (Ip_object.last_fetched + timedelta(minutes=Ip_object.min_poll_time)) < timezone.now():
                     url = "http://" + Ip_object.name + ":" + PORT + "/Snh_ItfReq"
                     try:
-                        response = requests.head(url)
+                        response = requests.head(url, timeout=TIMOEOUT)
                         Ip_object.status = response.status_code
+                    except requests.Timeout:
+                        Ip_object.status = "Down"
                     except requests.ConnectionError:
                         Ip_object.status = "Down"
                     Ip_object.last_fetched = timezone.now()
                     Ip_object.save()
                     print "Status set for : " + Ip_object.name 
+                else:
+                    print "Ignoring IP : " + Ip_object.name
