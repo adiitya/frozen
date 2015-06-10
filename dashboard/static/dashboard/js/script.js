@@ -127,17 +127,29 @@ $(document).ready(function(){
                 dashboard.manageTile.startUpdateTimer(ip,ip_time_map['ip']);
             });
         },
-        updateTile : function(ip){    
+        updateTile : function(ip){   
+            //This ip is separated by "_" instead of "." 
             data = dashboard.fetchIpData.action(dashboard.helpers.reversetransformIp(ip),function(Ipdata){
                 var stat = '';
                 if(Ipdata['status']==null)
                     stat = "N/A";
-                else if(Ipdata['status']=="200")
+                else if(Ipdata['status']=="200"){
+                    if($('#'+ip+' div').hasClass('down')){
+                        $('#'+ip+' div').removeClass("down");
+                        $('#'+ip+' div').addClass('up-'+Math.floor((Math.random() * 4)));
+                    }
                     stat = "UP";
-                else
+                }
+                else{
+                    for(var i=0; i < 4; i++){
+                        if($('#'+ip+' div').hasClass('up-'+i))
+                            $('#'+ip+' div').removeClass('up-'+i);
+                    }
+                    if(!$('#'+ip+' div').hasClass('down'))
+                        $('#'+ip+' div').addClass('down')
                     stat = "DOWN";
+                }
                 $('#'+ip+' div h2').html(stat);
-                console.log("aa");
             });
         }
     };
