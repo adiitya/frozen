@@ -170,6 +170,7 @@ $(document).ready(function(){
                     stat = "DOWN";
                 }
                 $('#'+ip+' div h2').html(stat);
+                $('#'+ip+' div p').html("Last fetched: "+Ipdata['last_fetched']);
             });
         }
     };
