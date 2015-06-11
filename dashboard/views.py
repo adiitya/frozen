@@ -1,6 +1,7 @@
 from django.views import generic
 from django.core.urlresolvers import reverse
 from django.core import serializers
+from django.conf import settings
 from django.shortcuts import render , get_object_or_404
 from django.http import HttpResponse, Http404, HttpResponseRedirect, JsonResponse
 from .models import Ip, UserIpMap, UserProfile
@@ -68,7 +69,7 @@ def ip_status(request):
         response_data = {}
         response_data['name'] = Ip_object.name
         response_data['status'] = Ip_object.status
-        response_data['last_fetched'] = Ip_object.last_fetched.strftime("%b %d, %Y, %I:%M %P")
+        response_data['last_fetched'] = Ip_object.last_fetched.astimezone(tztime(settings.TIME_ZONE)).strftime("%b %d, %Y, %I:%M %P")
         response_data['min_poll_time'] = Ip_object.min_poll_time
         return JsonResponse(response_data)
     except:
