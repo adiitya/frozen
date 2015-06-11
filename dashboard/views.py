@@ -7,6 +7,7 @@ from .models import Ip, UserIpMap, UserProfile
 from django.contrib.auth import authenticate, login, logout
 from django.template import RequestContext, loader
 from django.utils import timezone
+from pytz import timezone as tztime
 from datetime import datetime
 import json, time
 
