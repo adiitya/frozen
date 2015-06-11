@@ -2,6 +2,7 @@
 	<head>
 		<script src="static/dashboard/js/jquery-1.11.3.min.js"></script>
 		<script>
+		//Creates a map for each IP to its min poll time in front-end
 		var ip_time_map = {};
     	{% for IP in IPs %}
 	        ip_time_map["{{ IP.name }}"] = {{ IP.min_poll_time}};

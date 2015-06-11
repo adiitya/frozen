@@ -14,7 +14,7 @@ class UserProfile(models.Model):
     # The last access time of the user
     last_access = models.DateTimeField('last access', default = datetime.datetime(1970,1,1))
 
-    # Whether the user is alive or not
+    # Whether the user is alive or not (Managed by cron)
     alive = models.BooleanField(default = False)
 
     @receiver(post_save, sender=User)
