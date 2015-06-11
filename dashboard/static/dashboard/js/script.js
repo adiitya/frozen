@@ -1,14 +1,42 @@
+/*
+    HOW IT WORKS -- 
+        1. Adding and removing of tiles for each IP takes via ajax request.
+        Events while adding :-
+         *  It adds to main Db and generates a response for success and calls the managetile.add():
+            --Managetile.add() creates a new tile and append it to the screen then starts a new timer for this newly
+              created tile which will be updating it with fresh status at regular intervals.
+        Events while removing :-
+        * It deletes Ip from main Db and then remove the tile from main screen.
+        Rest description is above all functions.
+    Thing t NOTE !!
+        * To select any specific IP tile we provide each ip an id which is equal to the IP address.
+        Since css Id's cant be separated with "." so we provide underscores in place of "." just for CSS 
+        requirement. There are two function in dashboard.helpers which do it for u
+            Ex - dashboard.helpers.transformIp("12.13.14.15") will return "12_13_14_15"
+            And for making requests we will need the actual IP format which is done by the other function:
+                dashboard.reversetransformIp("12_13_14_15") returns "12.13.14.15".
+                So for css id's use the output of transformIp() and for requests to server use the output
+                of reversetransformIp().
+
+                Cheers!!!
+
+*/          
+
+
+
 
 $(document).ready(function(){
 
     var dashboard = {};
 
+    //Any source or link you use to make requests goes here.
     dashboard.source = {
         delete_ip : "/delete_ip",
         add_ip : "/add_ip",
         ip_status : "/status"
     }
 
+    //Invoked when someone hits the add_ip_button
     $('#add_ip_button').click(function() {
         $.ajax({
             type: "GET",
@@ -35,6 +63,7 @@ $(document).ready(function(){
         })
     });
 
+    //Invoked when someone hits the delete_ip_button
     $('#delete_ip_button').click(function() {
         $.ajax({
             type: "GET",
@@ -57,6 +86,7 @@ $(document).ready(function(){
         });
     });
 
+    //It fetches current status of ip provided. Remember the ip provided shoukd be in proper IP format.
     dashboard.fetchIpData = {
         action : function(ip,handleData){
             $.ajax({
@@ -75,6 +105,7 @@ $(document).ready(function(){
         }
     };
     
+    //Helper functions for modifying IP format
     dashboard.helpers = {
         transformIp : function(ip){
             var res = ip.split(".");
@@ -86,6 +117,7 @@ $(document).ready(function(){
         }
     };
 
+    //Functios for managing tiles
     dashboard.manageTile = {
         create : function(Ipdata){
             var row = 1, col = 1, last_col = 0, flag = 0;
@@ -175,5 +207,8 @@ $(document).ready(function(){
         }
     };
 
+    //This function is called whenever the page reloads and it starts the timer for 
+    //updating the tiles present on screen.
     dashboard.manageTile.callUpdaterForEachTile();
+
 });
