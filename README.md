@@ -28,6 +28,6 @@ Dashboard is a Django based, shopify-dashing powered network monitoring tool tha
   - ####CleanInactiveUsers
     - Runs every 1 minute   
     - Checks all users and if the last_access is less than some specified time limit we make that user dead and from this users IP list we make those IP's dead which are only being watched by this user.
-    - ####FetchIpStatus
+  - ####FetchIpStatus
       - Runs every 1 minute.
       - check if the minimum poll time + last fetched time for this Ip objects exceeds current time, it fetches status else continue. 
