@@ -13,7 +13,6 @@ Dashboard is a Django based, shopify-dashing powered network monitoring tool tha
 2. Clone this repository and `cd` to frozen.
 
 3. Install dependencies using:
-
 > pip install -U -r requirements.txt
 
 4. Edit frozen/settings.py to your requriments
