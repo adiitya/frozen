@@ -6,6 +6,7 @@ from django.contrib.auth import authenticate, login, logout
 import re
 from dashboard import views
 
+#All requests are validated or filtered via the middleware
 
 class ValidateRequestMiddleware:
 
